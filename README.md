@@ -52,4 +52,7 @@ G.pointOutNode(x, 1);
 G.pointOutEdge(u, v, 1);
 
 //代码结束时自动输出.html文件
+
+//随时保存一个当前图状态到.dot文件中
+G.saveDot()
 ```

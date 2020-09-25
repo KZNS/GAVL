@@ -13,29 +13,29 @@ VGraph::VGraph()
 
 VGraph::~VGraph()
 {
-    dotFile << "[" << std::endl;
+    htmlFile << "[" << std::endl;
     if (directed)
     {
-        dotFile << "'digraph {'," << std::endl;
+        htmlFile << "'digraph {'," << std::endl;
     }
     else
     {
-        dotFile << "'graph {'," << std::endl;
+        htmlFile << "'graph {'," << std::endl;
     }
-    dotFile << "'   END'," << std::endl;
-    dotFile << "'}'" << std::endl;
-    dotFile << "]," << std::endl;
+    htmlFile << "'   END'," << std::endl;
+    htmlFile << "'}'" << std::endl;
+    htmlFile << "]," << std::endl;
     std::ifstream tf(TEMPLATE_T);
     std::string tail((std::istreambuf_iterator<char>(tf)),
                       std::istreambuf_iterator<char>());
     tf.close();
-    dotFile << tail;
-    dotFile.close();
+    htmlFile << tail;
+    htmlFile.close();
 }
 
 int VGraph::setFileName(std::string _fileName)
 {
-    if (dotFile.is_open())
+    if (htmlFile.is_open())
     {
         return -1;
     }
@@ -48,7 +48,7 @@ int VGraph::setFileName(std::string _fileName)
 
 int VGraph::setDirected(bool _directed)
 {
-    if (dotFile.is_open())
+    if (htmlFile.is_open())
     {
         return -1;
     }
@@ -62,7 +62,7 @@ int VGraph::setDirected(bool _directed)
 void VGraph::init()
 {
     checkEveryStap = false;
-    colors[0] = "#aec7e8";
+    colors[0] = "#ffffff";
     colors[1] = "#ff4500";
     colors[2] = "#df7f0e";
     colors[3] = "#FFD700";
@@ -79,8 +79,8 @@ void VGraph::init()
     std::string head((std::istreambuf_iterator<char>(tf)),
                       std::istreambuf_iterator<char>());
     tf.close();
-    dotFile.open(fileName.c_str());
-    dotFile << head;
+    htmlFile.open(fileName.c_str());
+    htmlFile << head;
 }
 
 void VGraph::doneInit()
@@ -96,28 +96,32 @@ void VGraph::setCheckPoint()
         checkBlock--;
         return;
     }
-    dotFile << "[" << std::endl;
-    if (directed)
+    StringList sl;
+
+    htmlFile << "[" << std::endl;
+    
+    sl = sPrintGraphHead_();
+    for (int i = 0; i < sl.size(); i++)
     {
-        dotFile << "'digraph {'," << std::endl;
+        htmlFile << "'" << sl[i] << "'," << std::endl;
     }
-    else
-    {
-        dotFile << "'graph {'," << std::endl;
-    }
-    dotFile << "'   node [style=\"filled\"]'," << std::endl;
 
     for (VNodeIt nodeIt = nodes.begin(); nodeIt!=nodes.end(); nodeIt++)
     {
-
-        printNode_(nodeIt);
+        htmlFile << "'" << sPrintNode_(nodeIt) << "'," << std::endl;
     }
     for (VEdgeIt edgeIt = edges.begin(); edgeIt != edges.end(); edgeIt++)
     {
-        printEdge_(edgeIt);
+         htmlFile << "'" << sPrintEdge_(edgeIt) << "'," << std::endl;
     }
-    dotFile << "'}'" << std::endl;
-    dotFile << "]," << std::endl;
+
+    sl = sPrintGraphTail_();
+    for (int i = 0; i < sl.size(); i++)
+    {
+        htmlFile <<"'" <<sl[i] <<"'," << std::endl;
+    }
+    
+    htmlFile << "]," << std::endl;
 }
 
 void VGraph::addNode(int nodeId)
@@ -406,6 +410,37 @@ void VGraph::setCheckBlock(int times)
     checkBlock = times;
 }
 
+void VGraph::saveDot(std::string dotFileName)
+{
+    std::ofstream dotFile;
+    dotFile.open(dotFileName.c_str());
+
+    StringList sl;
+    
+    sl = sPrintGraphHead_();
+    for (int i = 0; i < sl.size(); i++)
+    {
+        dotFile << sl[i] << std::endl;
+    }
+
+    for (VNodeIt nodeIt = nodes.begin(); nodeIt!=nodes.end(); nodeIt++)
+    {
+        dotFile << sPrintNode_(nodeIt) << std::endl;
+    }
+    for (VEdgeIt edgeIt = edges.begin(); edgeIt != edges.end(); edgeIt++)
+    {
+        dotFile << sPrintEdge_(edgeIt) << std::endl;
+    }
+
+    sl = sPrintGraphTail_();
+    for (int i = 0; i < sl.size(); i++)
+    {
+        dotFile <<sl[i] << std::endl;
+    }
+
+    dotFile.close();
+}
+
 /* private */
 
 void VGraph::addNode_(int nodeId)
@@ -512,49 +547,75 @@ int VGraph::unPointOutEdge_(int level)
     return 0;
 }
 
-void VGraph::printNode_(VNodeIt node)
+StringList VGraph::sPrintGraphHead_()
 {
-    int nodeId;
-    nodeId = node->first;
-    dotFile << "'    " << nodeId << " [";
-
-    dotFile << "label=\"" << nodeId;
-    for (VProperty::iterator it = node->second.begin(); it != node->second.end(); it++)
-    {
-        dotFile << "\\n" << it->first << ": " << it->second;
-    }
-    dotFile << "\" ";
-    
-    dotFile << "shape=\"" << shapeNode[nodeId] << "\" "
-            << "fillcolor=\"" << colorNode[nodeId] << "\" "
-            << "]'," << std::endl;
-}
-
-void VGraph::printEdge_(VEdgeIt edgeIt)
-{
-    dotFile << "'    ";
+    StringList sl;
     if (directed)
     {
-        dotFile << edgeIt->first.first << " -> " << edgeIt->first.second;   
+        sl.push_back("digraph {");
     }
     else
     {
-        dotFile << edgeIt->first.first << " -- " << edgeIt->first.second;
+        sl.push_back("graph {");
     }
-    dotFile << " [";
-    dotFile << "label=\"";
+    sl.push_back("   node [style=\"filled\"]");
+    return sl;
+}
+
+StringList VGraph::sPrintGraphTail_()
+{
+    StringList sl;
+    sl.push_back("}");
+    return sl;
+}
+
+std::string VGraph::sPrintNode_(VNodeIt nodeIt)
+{
+    std::ostringstream oss;
+    int nodeId;
+    nodeId = nodeIt->first;
+    oss << "    " << nodeId << " [";
+
+    oss << "label=\"" << nodeId;
+    for (VProperty::iterator it = nodeIt->second.begin(); it != nodeIt->second.end(); it++)
+    {
+        oss << "\\n" << it->first << ": " << it->second;
+    }
+    oss << "\" ";
+    
+    oss << "shape=\"" << shapeNode[nodeId] << "\" "
+        << "fillcolor=\"" << colorNode[nodeId] << "\" "
+        << "]";
+    
+    return oss.str();
+}
+
+std::string VGraph::sPrintEdge_(VEdgeIt edgeIt)
+{
+    std::ostringstream oss;
+    oss << "    ";
+    if (directed)
+    {
+        oss << edgeIt->first.first << " -> " << edgeIt->first.second;   
+    }
+    else
+    {
+        oss << edgeIt->first.first << " -- " << edgeIt->first.second;
+    }
+    oss << " [";
+    oss << "label=\"";
     bool firstLine = true;
     if (!weightEdge[edgeIt->first].empty())
     {
         if (firstLine)
         {
-            dotFile << weightEdge[edgeIt->first];
+            oss << weightEdge[edgeIt->first];
             firstLine = false;
         }
         else
         {
-            dotFile << "\\n";
-            dotFile << weightEdge[edgeIt->first];
+            oss << "\\n";
+            oss << weightEdge[edgeIt->first];
         }
     }
 
@@ -563,25 +624,27 @@ void VGraph::printEdge_(VEdgeIt edgeIt)
         if (firstLine)
         {
             VPropertyIt it = edgeIt->second.begin();
-            dotFile << it->first << ": " << it->second;
+            oss << it->first << ": " << it->second;
             for (it++; it != edgeIt->second.end(); it++)
             {
-                dotFile << "\\n" << it->first << ": " << it->second;
+                oss << "\\n" << it->first << ": " << it->second;
             }
             firstLine = false;
         }
         else
         {
-            dotFile << weightEdge[edgeIt->first];
+            oss << weightEdge[edgeIt->first];
             for (VPropertyIt it = edgeIt->second.begin(); it != edgeIt->second.end(); it++)
             {
-                dotFile << "\\n" << it->first << ": " << it->second;
+                oss << "\\n" << it->first << ": " << it->second;
             }
         }
     }
-    dotFile << "\" ";
-    dotFile << "color=\"" << colorEdge[edgeIt->first] << "\" ";
-    dotFile << "]'," << std::endl;
+    oss << "\" ";
+    oss << "color=\"" << colorEdge[edgeIt->first] << "\" ";
+    oss << "]";
+
+    return oss.str();
 }
 
 VEdgeId VGraph::getEdgeId_(int u, int v) const

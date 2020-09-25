@@ -6,7 +6,8 @@
 #include <cstring>
 #include <fstream>
 #include <cstdio>
-#include <sstream> 
+#include <sstream>
+#include <vector>
 
 /* 可视化网页模板位置 */
 #define TEMPLATE_H "gavl/templateH.html"
@@ -25,6 +26,8 @@ typedef VNodeMap::iterator VNodeIt;
 /* 边集合类型 及其迭代器*/
 typedef std::map<VEdgeId, VProperty> VEdgeMap; 
 typedef VEdgeMap::iterator VEdgeIt;
+/* 字符串列表 */
+typedef std::vector<std::string> StringList;
 
 /* 可视化库主体类 */
 class VGraph
@@ -124,13 +127,18 @@ public:
     /* 删除从 u 到 v 边的标签为 tag 的信息*/
     int delInfoEdge(int u, int v, std::string tag);
     
-    /* 其他功能 */
+    /* 其他功能 不会自动触发setCheckPoint*/
     
     /* 
      * 接下来times次修改不输出状态到动画
-     * 注意被屏蔽输出的修改将在有效输出中作为同一帧动画一起发生
+     * 注意被屏蔽输出的修改并不是不存在，而是将在有效输出中作为同一帧动画一起发生
      */
     void setCheckBlock(int times);
+
+    /*
+     * 保存当前状态为dot格式文件
+     */
+    void saveDot(std::string dotFileName);
 
 private:
     /* true 有向图，false 无向图 */
@@ -146,7 +154,7 @@ private:
     bool checkEveryStap;
 
     /* 可视化网页的文件流 */
-    std::ofstream dotFile;
+    std::ofstream htmlFile;
 
     /* 内置的NUM_COLOR种颜色 */
     std::string colors[NUM_COLOR];
@@ -191,14 +199,16 @@ private:
     /* 取消层级为level的边的高亮*/
     int unPointOutEdge_(int level);
 
-    /* 以下方法输出图的状态到可视化网页 */
-
-    /* 输出结点状态 */
-    void printNode_(VNodeIt nodeIt);
-    /* 输出边状态 */
-    void printEdge_(VEdgeIt edgeIt);
-
     /* 以下方法方便内部处理 */
+
+    /* 输出图的头部信息到string的vector */
+    StringList sPrintGraphHead_();
+    /* 输出图的尾部信息到string的vector */
+    StringList sPrintGraphTail_();
+    /* 输出结点状态到string */
+    std::string sPrintNode_(VNodeIt nodeIt);
+    /* 输出结点状态到string */
+    std::string sPrintEdge_(VEdgeIt edgeIt);
     
     /* 获得从 u 到 v 的边的编号 */
     VEdgeId getEdgeId_(int u, int v) const;

@@ -55,6 +55,7 @@ int main()
     for (int i = 1; i <= N; i++)
     {
         printf("%d %d\n", i, dis[i]);
-    }   
+    }
+    G.saveDot("example1.dot");
     return 0;
 }
