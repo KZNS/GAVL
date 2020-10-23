@@ -50,10 +50,8 @@ public:
      * 如不调用，默认值 false
      */
     int setDirected(bool _directed);
-    /* 初始化图的其余信息，创建可视化网页文件，输出文件头部 */
+    /* 创建可视化网页文件，输出文件头部，和init之前的图的状态做为初始状态*/
     void init();
-    /* 结束初始化，init至doneInit之间的图操作不产生动画，结果作为图的初始状态*/
-    void doneInit();
     /* 设置检查点，输出当前图的状态作为动画的一帧 */
     void setCheckPoint();
 

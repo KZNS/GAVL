@@ -9,6 +9,20 @@ VGraph::VGraph()
 {
     fileName = "gavl.html";
     directed = false;
+
+    checkEveryStap = false;
+    colors[0] = "#ffffff";
+    colors[1] = "#ff4500";
+    colors[2] = "#df7f0e";
+    colors[3] = "#FFD700";
+    colors[4] = "#ffbb78";
+    colors[5] = "#2ca02c";
+    colors[6] = "#98df8a";
+    colorBlack = "#000000";
+    memset(pointOutNodeLs, -1, sizeof(pointOutNodeLs));
+    memset(pointOutEdgeLs, -1, sizeof(pointOutEdgeLs));
+
+    checkBlock = 0;
 }
 
 VGraph::~VGraph()
@@ -61,30 +75,13 @@ int VGraph::setDirected(bool _directed)
 
 void VGraph::init()
 {
-    checkEveryStap = false;
-    colors[0] = "#ffffff";
-    colors[1] = "#ff4500";
-    colors[2] = "#df7f0e";
-    colors[3] = "#FFD700";
-    colors[4] = "#ffbb78";
-    colors[5] = "#2ca02c";
-    colors[6] = "#98df8a";
-    colorBlack = "#000000";
-    memset(pointOutNodeLs, -1, sizeof(pointOutNodeLs));
-    memset(pointOutEdgeLs, -1, sizeof(pointOutEdgeLs));
-
-    checkBlock = 0;
-
     std::ifstream tf(TEMPLATE_H);
     std::string head((std::istreambuf_iterator<char>(tf)),
                       std::istreambuf_iterator<char>());
     tf.close();
     htmlFile.open(fileName.c_str());
     htmlFile << head;
-}
 
-void VGraph::doneInit()
-{
     checkEveryStap = true;
     setCheckPoint();
 }
