@@ -22,7 +22,8 @@ int main()
     {
         for (int j = 1; j <= M; j++)
         {
-            if (i != j) {
+            if (i != j)
+            {
                 mp[i][j] = INF;
                 G.addEdge(i, j, INF);
             }

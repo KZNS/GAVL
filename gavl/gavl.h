@@ -24,7 +24,7 @@ typedef std::pair<int, int> VEdgeId;
 typedef std::map<int, VProperty> VNodeMap;
 typedef VNodeMap::iterator VNodeIt;
 /* 边集合类型 及其迭代器*/
-typedef std::map<VEdgeId, VProperty> VEdgeMap; 
+typedef std::map<VEdgeId, VProperty> VEdgeMap;
 typedef VEdgeMap::iterator VEdgeIt;
 /* 字符串列表 */
 typedef std::vector<std::string> StringList;
@@ -37,7 +37,7 @@ public:
     VGraph();
     /* 析构函数，输出可视化网页的末尾部分并保存 */
     ~VGraph();
-    
+
     /* 
      * 设置可视化网页文件名，需要在init()前执行
      * 如不调用，默认值 “gavl.html”
@@ -60,19 +60,19 @@ public:
     /* 添加一个编号为 nodeId 的结点*/
     void addNode(int nodeId);
     /* 添加 total 个结点，编号从 0 到 total-1 */
-    void addNodes(int total); 
+    void addNodes(int total);
     /* 添加一些结点，编号从 firstId 到 lastId（含） */
     void addNodes(int firstId, int lastId);
     /* 添加从 u 指向 v 的有向边或无向边，根据图是否为有向图的设定 */
     void addEdge(int u, int v);
     /* 添加从 u 指向 v 的有向边或无向边, 边权为 c */
-    template<typename T>
+    template <typename T>
     void addEdge(int u, int v, T c);
     /* 删除编号为nodeId的结点*/
     void delNode(int nodeId);
     /* 在有向图中删除从u到v的边，在无向图中删除u和v之间的边 */
     void delEdge(int u, int v);
-  
+
     /* 显示效果部分*/
 
     /*
@@ -109,24 +109,24 @@ public:
     int unPointOutEdge(int u, int v);
 
     /* 设置从u到v的边的权值，值为info */
-    template<typename T>
+    template <typename T>
     int setWeightEdge(int u, int v, T info);
 
     /* 其他结点/边上的信息信息通过以下接口设置 */
 
     /* 设置 nodeId 结点信息，标签为tag，内容为info*/
-    template<typename T>
+    template <typename T>
     int setInfoNode(int nodeId, std::string tag, T info);
     /* 删除 nodeId 结点标签为 tag 的信息*/
     int delInfoNode(int nodeId, std::string tag);
     /* 设置从 u 到 v 边的信息，标签为tag，内容为info*/
-    template<typename T>
+    template <typename T>
     int setInfoEdge(int u, int v, std::string tag, T info);
     /* 删除从 u 到 v 边的标签为 tag 的信息*/
     int delInfoEdge(int u, int v, std::string tag);
-    
+
     /* 其他功能 不会自动触发setCheckPoint*/
-    
+
     /* 
      * 接下来times次修改不输出状态到动画
      * 注意被屏蔽输出的修改并不是不存在，而是将在有效输出中作为同一帧动画一起发生
@@ -158,7 +158,7 @@ private:
     std::string colors[NUM_COLOR];
     /* 黑色 */
     std::string colorBlack;
-    
+
     /* 结点颜色 */
     std::map<int, std::string> colorNode;
     /* 结点形状 */
@@ -167,7 +167,7 @@ private:
     std::map<VEdgeId, std::string> colorEdge;
 
     /* 边的权值 */
-    std::map<std::pair<int, int> , std::string> weightEdge;
+    std::map<std::pair<int, int>, std::string> weightEdge;
 
     /* 高亮结点列表 */
     int pointOutNodeLs[NUM_COLOR];
@@ -176,7 +176,7 @@ private:
 
     /* 屏蔽setCheckPoint的次数 */
     int checkBlock;
-    
+
     /* 通过以下方法，方便添加多种对外接口 */
 
     /* 添加编号为nodeId结点 */
@@ -207,11 +207,11 @@ private:
     std::string sPrintNode_(VNodeIt nodeIt);
     /* 输出结点状态到string */
     std::string sPrintEdge_(VEdgeIt edgeIt);
-    
+
     /* 获得从 u 到 v 的边的编号 */
     VEdgeId getEdgeId_(int u, int v) const;
     /* 转换任意类型数据到字符串 */
-    template<typename T>
+    template <typename T>
     std::string toString_(T info);
 };
 

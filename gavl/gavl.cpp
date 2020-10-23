@@ -41,7 +41,7 @@ VGraph::~VGraph()
     htmlFile << "]," << std::endl;
     std::ifstream tf(TEMPLATE_T);
     std::string tail((std::istreambuf_iterator<char>(tf)),
-                      std::istreambuf_iterator<char>());
+                     std::istreambuf_iterator<char>());
     tf.close();
     htmlFile << tail;
     htmlFile.close();
@@ -77,7 +77,7 @@ void VGraph::init()
 {
     std::ifstream tf(TEMPLATE_H);
     std::string head((std::istreambuf_iterator<char>(tf)),
-                      std::istreambuf_iterator<char>());
+                     std::istreambuf_iterator<char>());
     tf.close();
     htmlFile.open(fileName.c_str());
     htmlFile << head;
@@ -96,28 +96,28 @@ void VGraph::setCheckPoint()
     StringList sl;
 
     htmlFile << "[" << std::endl;
-    
+
     sl = sPrintGraphHead_();
     for (int i = 0; i < sl.size(); i++)
     {
         htmlFile << "'" << sl[i] << "'," << std::endl;
     }
 
-    for (VNodeIt nodeIt = nodes.begin(); nodeIt!=nodes.end(); nodeIt++)
+    for (VNodeIt nodeIt = nodes.begin(); nodeIt != nodes.end(); nodeIt++)
     {
         htmlFile << "'" << sPrintNode_(nodeIt) << "'," << std::endl;
     }
     for (VEdgeIt edgeIt = edges.begin(); edgeIt != edges.end(); edgeIt++)
     {
-         htmlFile << "'" << sPrintEdge_(edgeIt) << "'," << std::endl;
+        htmlFile << "'" << sPrintEdge_(edgeIt) << "'," << std::endl;
     }
 
     sl = sPrintGraphTail_();
     for (int i = 0; i < sl.size(); i++)
     {
-        htmlFile <<"'" <<sl[i] <<"'," << std::endl;
+        htmlFile << "'" << sl[i] << "'," << std::endl;
     }
-    
+
     htmlFile << "]," << std::endl;
 }
 
@@ -163,15 +163,15 @@ void VGraph::addEdge(int u, int v)
     }
 }
 
-template<typename T>
- void VGraph::addEdge(int u, int v, T c)
- {
+template <typename T>
+void VGraph::addEdge(int u, int v, T c)
+{
     addEdge_(getEdgeId_(u, v), toString_(c));
     if (checkEveryStap)
     {
         setCheckPoint();
     }
- }
+}
 
 void VGraph::delNode(int nodeId)
 {
@@ -237,7 +237,7 @@ int VGraph::unPointOutNode(int nodeId)
         return -1;
     }
     int level;
-    for (level = NUM_COLOR-1; level >= 1; level--)
+    for (level = NUM_COLOR - 1; level >= 1; level--)
     {
         if (pointOutNodeLs[level] == nodeId)
         {
@@ -305,7 +305,7 @@ int VGraph::unPointOutEdge(int u, int v)
         return -1;
     }
     int level;
-    for (level = NUM_COLOR-1; level >= 1; level--)
+    for (level = NUM_COLOR - 1; level >= 1; level--)
     {
         if (pointOutEdgeLs[level] == edgeId)
         {
@@ -323,7 +323,7 @@ int VGraph::unPointOutEdge(int u, int v)
     return 0;
 }
 
-template<typename T>
+template <typename T>
 int VGraph::setWeightEdge(int u, int v, T info)
 {
     VEdgeId edgeId;
@@ -340,7 +340,7 @@ int VGraph::setWeightEdge(int u, int v, T info)
     return 0;
 }
 
-template<typename T>
+template <typename T>
 int VGraph::setInfoNode(int nodeId, std::string tag, T info)
 {
     if (nodes.find(nodeId) == nodes.end())
@@ -362,14 +362,14 @@ int VGraph::delInfoNode(int nodeId, std::string tag)
         return -1;
     }
     nodes[nodeId].erase(tag);
-    if  (checkEveryStap)
+    if (checkEveryStap)
     {
         setCheckPoint();
     }
     return 0;
 }
 
-template<typename T>
+template <typename T>
 int VGraph::setInfoEdge(int u, int v, std::string tag, T info)
 {
     VEdgeId x;
@@ -395,7 +395,7 @@ int VGraph::delInfoEdge(int u, int v, std::string tag)
         return -1;
     }
     edges[x].erase(tag);
-        if (checkEveryStap)
+    if (checkEveryStap)
     {
         setCheckPoint();
     }
@@ -413,14 +413,14 @@ void VGraph::saveDot(std::string dotFileName)
     dotFile.open(dotFileName.c_str());
 
     StringList sl;
-    
+
     sl = sPrintGraphHead_();
     for (int i = 0; i < sl.size(); i++)
     {
         dotFile << sl[i] << std::endl;
     }
 
-    for (VNodeIt nodeIt = nodes.begin(); nodeIt!=nodes.end(); nodeIt++)
+    for (VNodeIt nodeIt = nodes.begin(); nodeIt != nodes.end(); nodeIt++)
     {
         dotFile << sPrintNode_(nodeIt) << std::endl;
     }
@@ -432,7 +432,7 @@ void VGraph::saveDot(std::string dotFileName)
     sl = sPrintGraphTail_();
     for (int i = 0; i < sl.size(); i++)
     {
-        dotFile <<sl[i] << std::endl;
+        dotFile << sl[i] << std::endl;
     }
 
     dotFile.close();
@@ -498,7 +498,7 @@ int VGraph::unPointOutNode_(int level)
     }
     pointOutNodeLs[level] = -1;
     setColorNode_(x, colors[0]);
-    for (int i = level-1; i >= 1; i--)
+    for (int i = level - 1; i >= 1; i--)
     {
         if (pointOutNodeLs[i] == x)
         {
@@ -533,7 +533,7 @@ int VGraph::unPointOutEdge_(int level)
     }
     pointOutEdgeLs[level] = std::make_pair(-1, -1);
     setColorEdge_(edgeId, colorBlack);
-    for (int i = level-1; i >= 1; i--)
+    for (int i = level - 1; i >= 1; i--)
     {
         if (pointOutEdgeLs[i] == edgeId)
         {
@@ -576,14 +576,15 @@ std::string VGraph::sPrintNode_(VNodeIt nodeIt)
     oss << "label=\"" << nodeId;
     for (VProperty::iterator it = nodeIt->second.begin(); it != nodeIt->second.end(); it++)
     {
-        oss << "\\n" << it->first << ": " << it->second;
+        oss << "\\n"
+            << it->first << ": " << it->second;
     }
     oss << "\" ";
-    
+
     oss << "shape=\"" << shapeNode[nodeId] << "\" "
         << "fillcolor=\"" << colorNode[nodeId] << "\" "
         << "]";
-    
+
     return oss.str();
 }
 
@@ -593,7 +594,7 @@ std::string VGraph::sPrintEdge_(VEdgeIt edgeIt)
     oss << "    ";
     if (directed)
     {
-        oss << edgeIt->first.first << " -> " << edgeIt->first.second;   
+        oss << edgeIt->first.first << " -> " << edgeIt->first.second;
     }
     else
     {
@@ -624,7 +625,8 @@ std::string VGraph::sPrintEdge_(VEdgeIt edgeIt)
             oss << it->first << ": " << it->second;
             for (it++; it != edgeIt->second.end(); it++)
             {
-                oss << "\\n" << it->first << ": " << it->second;
+                oss << "\\n"
+                    << it->first << ": " << it->second;
             }
             firstLine = false;
         }
@@ -633,7 +635,8 @@ std::string VGraph::sPrintEdge_(VEdgeIt edgeIt)
             oss << weightEdge[edgeIt->first];
             for (VPropertyIt it = edgeIt->second.begin(); it != edgeIt->second.end(); it++)
             {
-                oss << "\\n" << it->first << ": " << it->second;
+                oss << "\\n"
+                    << it->first << ": " << it->second;
             }
         }
     }
@@ -663,7 +666,7 @@ VEdgeId VGraph::getEdgeId_(int u, int v) const
     }
 }
 
-template<typename T>
+template <typename T>
 std::string VGraph::toString_(T info)
 {
     std::stringstream strstream;

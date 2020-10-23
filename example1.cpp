@@ -8,28 +8,28 @@
 using namespace std;
 #define Nmax 100
 int N, M;
-vector<pair<int, int> > gp[Nmax];
+vector<pair<int, int>> gp[Nmax];
 bool used[Nmax];
 int dis[Nmax];
 int main()
 {
     freopen("example1.in", "r", stdin);
     freopen("example1.out", "w", stdout);
-    VGraph G; /* 实例化一个可视化图  */ 
-    G.setFileName("example1.html"); /* 设置可视化文件名 */ 
+    VGraph G;                       /* 实例化一个可视化图  */
+    G.setFileName("example1.html"); /* 设置可视化文件名 */
 
-    scanf("%d %d", &N, &M); 
-    G.addNodes(1, N); /* 添加结点 1~N */ 
+    scanf("%d %d", &N, &M);
+    G.addNodes(1, N); /* 添加结点 1~N */
     int u, v, c;
     for (int i = 0; i < M; i++)
     {
         scanf("%d %d %d", &u, &v, &c);
         gp[u].push_back(make_pair(v, c));
         gp[v].push_back(make_pair(u, c));
-        G.addEdge(u, v, c); /* 添加边 u -- v, 边权为 c */ 
+        G.addEdge(u, v, c); /* 添加边 u -- v, 边权为 c */
     }
     G.init(); /* 初始化 */
-    priority_queue<pair<int, int> > pls;
+    priority_queue<pair<int, int>> pls;
     pls.push(make_pair(0, 1));
     pair<int, int> pru;
     int x;
