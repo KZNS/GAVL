@@ -24,9 +24,6 @@ VGraph G;
 G.setFileName("example1.html");
 G.setDirected(false);
 
-//初始化图
-G.init();
-
 //添加节点
 G.addNode(1)
 G.addNodes(10);
@@ -36,8 +33,8 @@ G.addNodes(1, N);
 G.addEdge(u, v);
 G.addEdge(u, v, c);
 
-//结束初始化图
-G.doneInit();
+//初始化图
+G.init();
 
 //根据图论算法，对图进行修改
 G.addNode(3)
