@@ -15,7 +15,6 @@ int main()
     freopen("example2.out", "w", stdout);
     VGraph G;
     G.setFileName("example2.html");
-    G.init();
     scanf("%d %d", &N, &M);
     G.addNodes(1, N);
 
@@ -41,7 +40,7 @@ int main()
         mp[v][u] = c;
         G.setWeightEdge(u, v, c);
     }
-    G.doneInit();
+    G.init();
     for (int k = 1; k <= N; k++)
     {
         G.pointOutNode(k, 1);
