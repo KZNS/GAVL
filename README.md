@@ -53,3 +53,7 @@ G.pointOutEdge(u, v, 1);
 //随时保存一个当前图状态到.dot文件中
 G.saveDot()
 ```
+
+## 引用
+
+本项目使用了[d3-graphviz](https://github.com/magjac/d3-graphviz)实现图的显示和动画效果
